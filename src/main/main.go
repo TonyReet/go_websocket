@@ -1,12 +1,11 @@
 package main
 
-import (
-	"socketio"
-)
+import "mc/src/service/wSocket"
 
 func main() {
-	socketio.StartSocket()
+	ch := make(chan bool)
+
+	go wSocket.InitWSocket()
+
+	<-ch
 }
-
-
-
