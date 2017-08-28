@@ -36,7 +36,7 @@ func (wS *WebSocket)handleNewMessage(conn *websocket.Conn){
 			delete(wS.conns, keyWord)
 		}
 
-		log.Println("新的连接地址:", keyWord)
+		log.Println("new conn address:", keyWord)
 		wS.conns[keyWord] = conn
 	}
 	wS.lock.Unlock()
@@ -46,7 +46,6 @@ func (wS *WebSocket)handleNewMessage(conn *websocket.Conn){
 }
 
 func (wS *WebSocket) readLoop(conn *websocket.Conn, keyWord string) {
-	//首次进入设置超时时间，SetReadDeadline设置的时间超过以后就不再读取
 	conn.SetReadDeadline(time.Now().Add(timeOut * time.Second))
 
 	for {
@@ -55,9 +54,9 @@ func (wS *WebSocket) readLoop(conn *websocket.Conn, keyWord string) {
 
 		if err != nil {
 			if websocket.IsCloseError(err, websocket.CloseGoingAway) || err == io.EOF {
-				log.Println("webSocket 已经关闭:", err)
+				log.Println("webSocket closed", err)
 			} else {
-				log.Println("websocket 读取出错", err)
+				log.Println("websocket err", err)
 			}
 
 			conn.Close()
@@ -65,14 +64,14 @@ func (wS *WebSocket) readLoop(conn *websocket.Conn, keyWord string) {
 		}
 
 		switch msgType {
-		case websocket.TextMessage: //文本消息就重设读取时间
+		case websocket.TextMessage:
 
 			wS.WSWriteTextMessages(msg)
 
 			//重置超时时间
 			conn.SetReadDeadline(time.Now().Add(timeOut * time.Second))
 		default:
-			log.Println("不支持的消息类型:", msgType)
+			log.Println("not support msgType:", msgType)
 		}
 	}
 
@@ -84,13 +83,13 @@ func (wS *WebSocket) readLoop(conn *websocket.Conn, keyWord string) {
 func (wS *WebSocket) readMessage(conn *websocket.Conn) (msgType int, p []byte, err error) {
 	msgType, message, err := conn.ReadMessage()
 	if err != nil {
-		log.Println("读取消息出错:", err)
+		log.Println("read message err:", err)
 
 
 		return msgType, message, err
 	}
 
-	log.Printf("读取的消息: %s", message)
+	log.Printf("read message: %s", message)
 
 	return msgType, message, err
 }
@@ -109,11 +108,11 @@ func (wS *WebSocket) writeMessage(conn *websocket.Conn, msgType int, msg string)
 	messageFinal := []byte(msg)
 	err := conn.WriteMessage(msgType, messageFinal)
 	if err != nil {
-		log.Println("发送消息出错:", err)
+		log.Println("send message err:", err)
 		return err
 	}
 
-	log.Printf("发送消息: %s,成功", msg)
+	log.Printf("send message: %s,success", msg)
 	return nil
 
 }
@@ -131,15 +130,15 @@ func (wS *WebSocket) HandleWriteMessages() {
 				if len(keyWord) != 0 {
 					wS.writeTextMessage(keyWord, message)
 				} else {
-					log.Println("<写>没有对应的keyWord信息")
+					log.Println("<write>not have keyWord")
 				}
 			} else {
-				log.Println("<写>类型转换失败:")
+				log.Println("<write> transfort fail:")
 			}
 		case interface{}:
 			log.Println("interface")
 		default:
-			log.Println("<写>不支持的类型")
+			log.Println("<write>not supoort type")
 		}
 	}
 }

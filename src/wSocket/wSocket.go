@@ -34,7 +34,7 @@ func GetInstance() *WebSocket {
 
 func (wS *WebSocket) socket(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "不支持的方式", http.StatusMethodNotAllowed)
+		http.Error(w, "not support", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -58,7 +58,7 @@ func InitWSocket() {
 	//输出时间+输出路径+文件名+行号格式
 	//log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	log.Println("-------------------webSocket启动-------------------")
+	log.Println("-------------------webSocket started-------------------")
 
 	wS.conns = make(map[string]*websocket.Conn)
 	http.HandleFunc("/", wS.socket)
@@ -68,6 +68,6 @@ func InitWSocket() {
 
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
-		log.Fatal("webSocket启动失败")
+		log.Fatal("webSocket start fail")
 	}
 }
