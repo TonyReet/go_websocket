@@ -54,7 +54,7 @@ func newCoon(index int) {
 				log.Println("read:", err)
 				return
 			}
-			log.Printf("is%dclient,recv: %s", index, message)
+			log.Printf("is %d client,recv: %s", index, message)
 		}
 	}()
 
