@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"github.com/gorilla/websocket"
-
 	"testing"
 )
 

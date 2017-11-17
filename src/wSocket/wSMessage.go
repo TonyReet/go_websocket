@@ -5,7 +5,6 @@ import (
 	"time"
 	"fmt"
 	"log"
-	"mc/src/utils"
 	"github.com/gorilla/websocket"
 )
 
@@ -66,7 +65,8 @@ func (wS *WebSocket) readLoop(conn *websocket.Conn, keyWord string) {
 		switch msgType {
 		case websocket.TextMessage:
 
-			wS.WSWriteTextMessages(msg)
+			wsMessage := &WsMessage{keyWord,string(msg)}
+			wS.WSWriteTextMessages(wsMessage)
 
 			//重置超时时间
 			conn.SetReadDeadline(time.Now().Add(timeOut * time.Second))

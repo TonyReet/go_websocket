@@ -1,6 +1,6 @@
 package main
 
-import "mc/src/service/wSocket"
+import "go_websocket/src/wSocket"
 
 func main() {
 	ch := make(chan bool)

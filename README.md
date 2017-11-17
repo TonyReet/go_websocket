@@ -1,4 +1,7 @@
 # go_websocket
+确定已经安装,websocket,如果没有安装,请安装:
+go get github.com/gorilla/websocket
+
 golang搭建的websocket服务器，目前能够提供心跳(在文件"wSConfig.go"里面配置),使用ip+network类型+conn的内存地址和conn进行映射，保存conn的准确。
 
 一个websocket链接发送多条消息情况
